@@ -5,6 +5,8 @@ import { createAppSlice, handleServerAppError, handleServerNetworkError } from "
 import { tasksApi } from "@/features/todolists/api/tasksApi"
 import type { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types"
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
+import { domainTaskSchema } from "@/features/auth/lib/schemas/schemas.ts"
+
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -27,6 +29,9 @@ export const tasksSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.getTasks(todolistId)
+          //zod
+          domainTaskSchema.array().parse(res.data.items)
+
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks: res.data.items }
         } catch (error) {

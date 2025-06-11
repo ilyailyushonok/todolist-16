@@ -46,6 +46,7 @@ export const TaskItem = ({ task, todolist }: Props) => {
       <div>
         <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} disabled={disabled} />
         <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={disabled} />
+        <p>{new Date(task.addedDate).toLocaleDateString()}</p>
       </div>
       <IconButton onClick={deleteTask} disabled={disabled}>
         <DeleteIcon />
