@@ -78,13 +78,13 @@ export const Login = () => {
             />
             {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
             <TextField type="password" label="Password" margin="normal" {...register("password")} />
-            <FormControlLabel label="Remember me" control={<Checkbox />} {...register("rememberMe")} />
-
-            <Controller
+            <FormControlLabel label="Remember me" control={ <Controller
               name={'rememberMe'}
               control={control}
               render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
-            />
+            />} />
+
+
 
             <Button type="submit" variant="contained" color="primary">
               Login
