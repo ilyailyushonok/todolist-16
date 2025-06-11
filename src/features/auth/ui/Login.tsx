@@ -9,7 +9,7 @@ import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
 import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
 
 type Inputs = {
@@ -22,15 +22,22 @@ export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
 
   const theme = getTheme(themeMode)
+
   const {
     register,
     handleSubmit,
+    reset,
+    control,
     formState: { errors },
   } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
   console.log(errors)
+
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data)
+    reset()
   }
+
   return (
     <Grid container justifyContent={"center"}>
       <FormControl>
@@ -62,7 +69,7 @@ export const Login = () => {
               margin="normal"
               {...register("email", {
                 required: true,
-                minLength: { value: 3, message: "min length<4" },
+                minLength: { value: 3, message: "min length <4 letters" },
                 pattern: {
                   value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                   message: "Incorrect email address",
@@ -72,6 +79,13 @@ export const Login = () => {
             {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
             <TextField type="password" label="Password" margin="normal" {...register("password")} />
             <FormControlLabel label="Remember me" control={<Checkbox />} {...register("rememberMe")} />
+
+            <Controller
+              name={'rememberMe'}
+              control={control}
+              render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
+            />
+
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>
