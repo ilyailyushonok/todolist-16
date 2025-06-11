@@ -6,7 +6,7 @@ export const domainTaskSchema = z.object({
   title: z.string(),
   status: z.enum(TaskStatus),
   priority: z.enum(TaskPriority),
-  startDate: z.string().nullable(),
+  startDate: z.iso.datetime({local:true}).nullable(),
   deadline: z.string().nullable(),
   id: z.string(),
   todoListId: z.string(),
