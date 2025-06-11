@@ -11,12 +11,14 @@ import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import styles from "./Login.module.css"
+import { LoginInputs, loginSchema } from "@/features/auth/lib/schemas/loginSchema.ts"
+import { zodResolver } from "@hookform/resolvers/zod"
 
-type Inputs = {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+// type Inputs = {
+//   email: string
+//   password: string
+//   rememberMe: boolean
+// }
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -29,11 +31,13 @@ export const Login = () => {
     reset,
     control,
     formState: { errors },
-  } = useForm<Inputs>({ defaultValues: { email: "", password: "", rememberMe: false } })
+  } = useForm<LoginInputs>({
+    defaultValues: { email: "", password: "", rememberMe: false },
+    resolver: zodResolver(loginSchema),
+  })
   console.log(errors)
 
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
     console.log(data)
     reset()
   }
@@ -67,24 +71,31 @@ export const Login = () => {
               error={!!errors.email}
               label="Email"
               margin="normal"
-              {...register("email", {
-                required: true,
-                minLength: { value: 3, message: "min length <4 letters" },
-                pattern: {
-                  value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: "Incorrect email address",
-                },
-              })}
+              {...register("email",
+              //   {
+              //   required: true,
+              //   minLength: { value: 3, message: "min length <4 letters" },
+              //   pattern: {
+              //     value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+              //     message: "Incorrect email address",
+              //   },
+              // }
+              )}
             />
             {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
             <TextField type="password" label="Password" margin="normal" {...register("password")} />
-            <FormControlLabel label="Remember me" control={ <Controller
-              name={'rememberMe'}
-              control={control}
-              render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
-            />} />
+            {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
 
-
+            <FormControlLabel
+              label="Remember me"
+              control={
+                <Controller
+                  name={"rememberMe"}
+                  control={control}
+                  render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
+                />
+              }
+            />
 
             <Button type="submit" variant="contained" color="primary">
               Login
